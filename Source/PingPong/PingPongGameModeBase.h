@@ -6,7 +6,6 @@
 #include "GameFramework/GameModeBase.h"
 #include "PingPongGameModeBase.generated.h"
 
-
 UCLASS()
 class PINGPONG_API APingPongGameModeBase : public AGameModeBase
 {

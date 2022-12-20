@@ -10,17 +10,11 @@ APlayerPing::APlayerPing()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	//SceneComponent = CreateDefaultSubobject<USceneComponent>("SceneComponent");
-	//SceneComponent->SetupAttachment(GetRootComponent());
-
 	StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>("StaticMesh");
-	StaticMeshComponent->SetupAttachment(GetRootComponent());
-
-	SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>("SpringArmComponent");
-	SpringArmComponent->SetupAttachment(GetRootComponent());
+	SetRootComponent(StaticMeshComponent);
 
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>("CameraComponent");
-	CameraComponent->SetupAttachment(SpringArmComponent);
+	CameraComponent->SetupAttachment(StaticMeshComponent);
 }
 
 void APlayerPing::BeginPlay()

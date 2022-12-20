@@ -6,8 +6,6 @@
 #include "GameFramework/Pawn.h"
 #include "PlayerPing.generated.h"
 
-//class USceneComponent;
-class USpringArmComponent;
 class UStaticMeshComponent;
 class UCameraComponent;
 
@@ -17,16 +15,9 @@ class PINGPONG_API APlayerPing : public APawn
 	GENERATED_BODY()
 
 public:
-
 	APlayerPing();
 
 protected:
-	//UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
-	//USceneComponent* SceneComponent;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
-	USpringArmComponent* SpringArmComponent;
-
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
 	UStaticMeshComponent* StaticMeshComponent;
 
