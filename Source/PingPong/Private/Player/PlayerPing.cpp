@@ -5,6 +5,7 @@
 #include "Camera/CameraComponent.h"
 #include "Components/InputComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Components/PrimitiveComponent.h"
 
 APlayerPing::APlayerPing()
 {
@@ -15,12 +16,14 @@ APlayerPing::APlayerPing()
 
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>("CameraComponent");
 	CameraComponent->SetupAttachment(StaticMeshComponent);
+
 }
 
 void APlayerPing::BeginPlay()
 {
 	Super::BeginPlay();
 	
+
 }
 
 void APlayerPing::Tick(float DeltaTime)
@@ -33,16 +36,12 @@ void APlayerPing::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-	PlayerInputComponent->BindAxis("MoveRight", this, &APlayerPing::MoveRight);
-	PlayerInputComponent->BindAxis("TurnAround", this, &APlayerPing::TurnAround);
 }
 
-void APlayerPing::MoveRight(float Amount)
+void APlayerPing::MoveUp()
 {
-	AddMovementInput(GetActorRightVector(), Amount);
+
 }
 
-void APlayerPing::TurnAround(float Amount)
-{
-	AddControllerYawInput(Amount);
-}
+
+
