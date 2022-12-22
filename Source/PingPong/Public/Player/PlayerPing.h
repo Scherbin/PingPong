@@ -7,7 +7,6 @@
 #include "PlayerPing.generated.h"
 
 class UStaticMeshComponent;
-class UCameraComponent;
 
 UCLASS()
 class PINGPONG_API APlayerPing : public APawn
@@ -22,9 +21,6 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
 	UStaticMeshComponent* StaticMeshComponent;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
-	UCameraComponent* CameraComponent;
-
 	virtual void BeginPlay() override;
 
 public:	
@@ -33,5 +29,10 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 private:
-	void MoveUp();
+	FVector MovementDirection;
+
+	UPROPERTY(EditAnywhere,Category="Movement")
+	float MovementSpeed = 500.0f;
+
+	void MoveUp(float Value);
 };

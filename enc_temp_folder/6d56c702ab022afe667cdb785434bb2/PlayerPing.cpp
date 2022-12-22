@@ -14,6 +14,9 @@ APlayerPing::APlayerPing()
 	StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>("StaticMesh");
 	SetRootComponent(StaticMeshComponent);
 
+	CameraComponent = CreateDefaultSubobject<UCameraComponent>("CameraComponent");
+	CameraComponent->SetupAttachment(StaticMeshComponent);
+
 }
 
 void APlayerPing::BeginPlay()
@@ -27,24 +30,17 @@ void APlayerPing::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (!MovementDirection.IsZero())
-	{
-		const FVector NewLocation = GetActorLocation() + (MovementDirection * DeltaTime * MovementSpeed);
-		SetActorLocation(NewLocation);
-	}
-
 }
 
 void APlayerPing::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-	InputComponent->BindAxis("MoveUp", this, &APlayerPing::MoveUp);
 }
 
-void APlayerPing::MoveUp(float Value)
+void APlayerPing::MoveUp()
 {
-	MovementDirection.Y = FMath::Clamp(Value, -1.0f, 1.0f);
+
 }
 
 

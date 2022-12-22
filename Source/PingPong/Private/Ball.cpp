@@ -2,6 +2,7 @@
 
 
 #include "Ball.h"
+#include "Kismet/KismetMathLibrary.h"
 
 ABall::ABall()
 {
@@ -15,11 +16,15 @@ void ABall::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	//StaticMeshComponent->SetPhysicsLinearVelocity()
+	
 }
 
 void ABall::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	FVector Location = GetActorLocation();
+	Location += GetActorForwardVector() * Speed * DeltaTime;
+	SetActorLocation(Location);
 }
 

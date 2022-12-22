@@ -6,7 +6,6 @@
 #include "GameFramework/Actor.h"
 #include "Ball.generated.h"
 
-class USceneComponent;
 class UStaticMeshComponent;
 
 UCLASS()
@@ -29,6 +28,5 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 private:
-	UPROPERTY(EditAnywhere, Category = "Movement")
-	float Speed = 500.0f;
+	void MovementBall(float const DeltaTime);
 };
