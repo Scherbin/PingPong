@@ -58,7 +58,7 @@ void  ABall::Start()
 	bGameover = false;
 	SetActorLocation(FVector::ZeroVector);
 	StaticMeshComponent->
-		SetPhysicsLinearVelocity(FVector(FMath::RandRange(-500.f, 500.f), (FMath::RandBool() ? 1.f : -1.f) * 9000.f,
+		SetPhysicsLinearVelocity(FVector(FMath::RandRange(-100.f, 100.f), (FMath::RandBool() ? 1.f : -1.f) * 7000.f,
 			0.f));
 }
 
@@ -66,7 +66,7 @@ void  ABall::Restart()
 {
 	SetActorLocation(FVector::ZeroVector);
 	StaticMeshComponent->
-		SetPhysicsLinearVelocity(FVector(FMath::RandRange(-500.f, 500.f), (FMath::RandBool() ? 1.f : -1.f) * 9000.f,
+		SetPhysicsLinearVelocity(FVector(FMath::RandRange(-100.f, 100.f), (FMath::RandBool() ? 1.f : -1.f) * 7000.f,
 			0.f));
 }
 
@@ -82,7 +82,7 @@ void ABall::OnPaddleHit(AActor* OverlappedActor, AActor* OtherActor)
 	if (PlayerPing)
 	{
 		const FVector BallLinearVelocity = StaticMeshComponent->GetPhysicsLinearVelocity();
-		const FVector NewBallLinearVelocity = FVector(BallLinearVelocity.X * -1.f, BallLinearVelocity.Y,
+		const FVector NewBallLinearVelocity = FVector(BallLinearVelocity.X * -5.f, BallLinearVelocity.Y,
 			BallLinearVelocity.Z);
 
 		StaticMeshComponent->SetPhysicsLinearVelocity(NewBallLinearVelocity);
@@ -92,7 +92,7 @@ void ABall::OnPaddleHit(AActor* OverlappedActor, AActor* OtherActor)
 	if (PingWall)
 	{
 		const FVector BallLinearVelocity =StaticMeshComponent->GetPhysicsLinearVelocity();
-		const FVector NewBallLinearVelocity = FVector(BallLinearVelocity.X * -3.f, BallLinearVelocity.Y,
+		const FVector NewBallLinearVelocity = FVector(BallLinearVelocity.X * -5.f, BallLinearVelocity.Y,
 			BallLinearVelocity.Z);
 
 		StaticMeshComponent->SetPhysicsLinearVelocity(NewBallLinearVelocity);
