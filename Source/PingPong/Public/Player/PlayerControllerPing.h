@@ -6,12 +6,14 @@
 #include "GameFramework/PlayerController.h"
 #include "PlayerControllerPing.generated.h"
 
-/**
- * 
- */
+
 UCLASS()
 class PINGPONG_API APlayerControllerPing : public APlayerController
 {
 	GENERATED_BODY()
 	
+protected:
+	virtual void SetupInputComponent() override;
+
+	virtual void OnPossess(APawn* InPawn) override;
 };

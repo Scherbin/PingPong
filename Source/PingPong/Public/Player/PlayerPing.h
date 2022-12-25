@@ -7,6 +7,7 @@
 #include "PlayerPing.generated.h"
 
 class UStaticMeshComponent;
+class UBoxComponent;
 
 UCLASS()
 class PINGPONG_API APlayerPing : public APawn
@@ -18,8 +19,11 @@ public:
 
 protected:
 	
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "PingPlayer|Components")
 	UStaticMeshComponent* StaticMeshComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "PingPlayer|Components")
+	UBoxComponent* BoxComponent;
 
 	virtual void BeginPlay() override;
 
@@ -27,6 +31,8 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+	UStaticMeshComponent* GetStaticMeshComponent() const { return StaticMeshComponent; }
 
 private:
 	FVector MovementDirection;

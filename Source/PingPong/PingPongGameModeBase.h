@@ -11,6 +11,14 @@ class PINGPONG_API APingPongGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
 	
+	//APingPongGameModeBase();
+
 public:
-	APingPongGameModeBase();
+	void StartGame() const;
+	void EndGame();
+
+protected:
+	virtual void PostLogin(APlayerController* NewPlayer) override;
+
+	int ConnectedPlayers{};
 };

@@ -6,8 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "Ball.generated.h"
 
-class USceneComponent;
 class UStaticMeshComponent;
+class UBoxComponent;
 
 UCLASS()
 class PINGPONG_API ABall : public AActor
@@ -18,9 +18,28 @@ public:
 	
 	ABall();
 
+	void Start();
+
+	void Restart();
+
+	void GameOver();
+
+
 protected:
+	UFUNCTION()
+	void OnPaddleHit(AActor* OverlappedActor, AActor* OtherActor);
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
 	UStaticMeshComponent* StaticMeshComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	UBoxComponent* BoxComponent;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
+	UStaticMesh* BallMesh;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
+	uint8 bGameover : 1;
 
 	virtual void BeginPlay() override;
 
@@ -29,6 +48,6 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 private:
-	UPROPERTY(EditAnywhere, Category = "Movement")
-	float Speed = 500.0f;
+	//UPROPERTY(EditAnywhere, Category = "Movement")
+	//float Speed = 500.0f;
 };
