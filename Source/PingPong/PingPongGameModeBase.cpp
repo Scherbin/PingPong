@@ -2,56 +2,73 @@
 
 
 #include "PingPongGameModeBase.h"
-#include "Player/PlayerPing.h"
-#include "Player/PlayerControllerPing.h"
+#include "EngineUtils.h"
+#include "GameFramework/PlayerStart.h"
 #include "Ball.h"
-#include "PingGameState.h"
-#include "Kismet/GameplayStatics.h"
+#include "Engine/GameEngine.h"
 
-void APingPongGameModeBase::PostLogin(APlayerController* NewPlayer)
+void APingPongGameModeBase::InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage)
 {
-	Super::PostLogin(NewPlayer);
+	Super::InitGame(MapName, Options, ErrorMessage);
+	UE_LOG(LogTemp, Warning, TEXT("Game is running: %s %s"), *MapName, *Options);
 
-	// possess a pawn
-	TArray<AActor*> PawnArray;
-	UGameplayStatics::GetAllActorsOfClass(this, APlayerPing::StaticClass(), PawnArray);
-	if (PawnArray.Num() > 0)
+	// Calculate and add Player Start points to array
+	for (TActorIterator<APlayerStart> It(GetWorld()); It; ++It)
 	{
-		for (AActor* Actor : PawnArray)
+		FreePlayerStarts.Add(*It);
+		UE_LOG(LogTemp, Warning, TEXT("Found player start: %s"), *(*It)->GetName());
+	}
+}
+
+
+void APingPongGameModeBase::PreLogin(const FString& Options, const FString& Address, const FUniqueNetIdRepl& UniqueId, FString& ErrorMessage)
+{
+	if (FreePlayerStarts.Num() == 0)
+	{
+		ErrorMessage = TEXT("Server full");
+	}
+
+	Super::PreLogin(Options, Address, UniqueId, ErrorMessage);
+}
+
+
+FString APingPongGameModeBase::InitNewPlayer(APlayerController* NewPlayerController, const FUniqueNetIdRepl& UniqueId, const FString& Options, const FString& Portal)
+{
+	if (FreePlayerStarts.Num() == 0)
+	{
+		UE_LOG(LogTemp, Log, TEXT("No free player starts in InitNewPlayer"));
+		return FString(TEXT("No free player starts"));
+	}
+
+
+	// Choose start spot for new player
+	NewPlayerController->StartSpot = FreePlayerStarts.Pop();
+	UE_LOG(LogTemp, Warning, TEXT("Using player start %s for %s"), *NewPlayerController->StartSpot->GetName(), *NewPlayerController->GetName());
+
+	// Show waiting 2nd player text
+	if (GetNumPlayers() == 1)
+	{
+		if (GEngine)
 		{
-			APlayerPing* PlayerPing = Cast<APlayerPing>(Actor);
-			if (PlayerPing && !PlayerPing->IsPawnControlled())
-			{
-				NewPlayer->Possess(PlayerPing);
-				PlayerPing->SetOwner(NewPlayer);
-			}
+			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Waiting for 2nd player.."));
+			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Waiting for 2nd player.."));
+			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Waiting for 2nd player.."));
 		}
 	}
 
+	// Launch ball when 2nd player connected
 	if (GetNumPlayers() == 2)
 	{
-		StartGame();
+		if (GEngine)
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Two players are enough. Let's play!"));
+		}
+
+		for (TActorIterator<ABall> It(GetWorld()); It; ++It)
+		{
+			It->Play();
+		}
 	}
-}
 
-void APingPongGameModeBase::StartGame() const
-{
-	TArray<AActor*> BallArray;
-	UGameplayStatics::GetAllActorsOfClass(this, ABall::StaticClass(), BallArray);
-
-	if (BallArray.Num() > 0 && IsValid(BallArray[0]))
-	{
-		Cast<ABall>(BallArray[0])->Start();
-	}
-}
-
-void APingPongGameModeBase::EndGame()
-{
-	TArray<AActor*> BallArray;
-	UGameplayStatics::GetAllActorsOfClass(this, ABall::StaticClass(), BallArray);
-
-	if (BallArray.Num() > 0 && IsValid(BallArray[0]))
-	{
-		Cast<ABall>(BallArray[0])->GameOver();
-	}
+	return Super::InitNewPlayer(NewPlayerController, UniqueId, Options, Portal);
 }

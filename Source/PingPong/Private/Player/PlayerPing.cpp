@@ -2,60 +2,49 @@
 
 
 #include "Player/PlayerPing.h"
-#include "Camera/CameraComponent.h"
-#include "Components/InputComponent.h"
-#include "Components/BoxComponent.h"
+
 
 APlayerPing::APlayerPing()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	bReplicates = true;
+	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Scene"));
 
-	StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>("StaticMesh");
-	SetRootComponent(StaticMeshComponent);
+	PlatformMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Player Mesh"));
+	PlatformMesh->SetupAttachment(RootComponent);
 
-	BoxComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("Box Collision"));
-	BoxComponent->SetupAttachment(RootComponent);
-	BoxComponent->SetCollisionProfileName("PhysicsActor");
-	BoxComponent->SetBoxExtent(FVector(175.f, 50.f, 50.f));
+	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Static Camera"));
+	Camera->SetupAttachment(RootComponent);
+
+	FloatingPawnMovement = CreateDefaultSubobject<UFloatingPawnMovement>(TEXT("Move Component"));
+
+	SpawnCollisionHandlingMethod = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 }
 
 
 void APlayerPing::BeginPlay()
 {
 	Super::BeginPlay();
-	
 
+	CameraLocation = Camera->GetComponentLocation();
 }
+
 
 void APlayerPing::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (!MovementDirection.IsZero())
+	// Attach cameta to initial location (can be unpinned or rewrite just to not do using tick function)
+	if (Camera->GetComponentLocation() != CameraLocation)
 	{
-		const FVector NewLocation = GetActorLocation() + (MovementDirection * DeltaTime * MovementSpeed);
-		SetActorLocation(NewLocation);
+		Camera->SetWorldLocation(CameraLocation);
 	}
-
 }
+
 
 void APlayerPing::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
-	InputComponent->BindAxis("MoveUp", this, &APlayerPing::MoveUp);
-}
-
-void APlayerPing::MoveUp(float Value)
-{
-	//if (Value != 0.f)
-	//{
-		//AddMovementInput(FVector(1, 0, 0), Value, true);
-	//}
-
-	MovementDirection.Y = FMath::Clamp(Value, -1.0f, 1.0f);
 }
 
 

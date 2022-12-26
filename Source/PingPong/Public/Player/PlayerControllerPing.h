@@ -11,9 +11,28 @@ UCLASS()
 class PINGPONG_API APlayerControllerPing : public APlayerController
 {
 	GENERATED_BODY()
-	
-protected:
+
+public:
+	APlayerControllerPing();
+
+	virtual void BeginPlay() override;
+
+	virtual void Tick(float DeltaTime) override;
+
 	virtual void SetupInputComponent() override;
 
-	virtual void OnPossess(APawn* InPawn) override;
+private:
+
+	void MoveLR(float Value);
+
+	bool LeaveGateBorders(FVector Dir, float Val);
+
+	UFUNCTION(Server, Unreliable)
+	void UpdatePawnLocationOnServer(FVector Location);
+
+private:
+	UPROPERTY(EditAnywhere)
+	float MoveSpeed;
+
+	FVector PlayerLocation;
 };

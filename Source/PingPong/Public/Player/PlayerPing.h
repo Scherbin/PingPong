@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
+#include "GameFramework/FloatingPawnMovement.h"
+#include "Camera/CameraComponent.h"
 #include "PlayerPing.generated.h"
 
 class UStaticMeshComponent;
@@ -17,28 +19,21 @@ class PINGPONG_API APlayerPing : public APawn
 public:
 	APlayerPing();
 
-protected:
-	
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "PingPlayer|Components")
-	UStaticMeshComponent* StaticMeshComponent;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "PingPlayer|Components")
-	UBoxComponent* BoxComponent;
-
-	virtual void BeginPlay() override;
-
-public:	
 	virtual void Tick(float DeltaTime) override;
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	UStaticMeshComponent* GetStaticMeshComponent() const { return StaticMeshComponent; }
+	virtual void BeginPlay() override;
 
 private:
-	FVector MovementDirection;
+	UPROPERTY(EditDefaultsOnly)
+	UStaticMeshComponent* PlatformMesh;
 
-	UPROPERTY(EditAnywhere,Category="Movement")
-	float MovementSpeed = 500.0f;
+	UPROPERTY(EditDefaultsOnly)
+	UCameraComponent* Camera;
 
-	void MoveUp(float Value);
+	UPROPERTY(EditDefaultsOnly)
+	UFloatingPawnMovement* FloatingPawnMovement;
+
+	FVector CameraLocation;
 };

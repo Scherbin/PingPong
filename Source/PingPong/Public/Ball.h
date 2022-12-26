@@ -4,10 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Components/SphereComponent.h"
 #include "Ball.generated.h"
-
-class UStaticMeshComponent;
-class UBoxComponent;
 
 UCLASS()
 class PINGPONG_API ABall : public AActor
@@ -18,36 +16,47 @@ public:
 	
 	ABall();
 
-	void Start();
-
-	void Restart();
-
-	void GameOver();
-
-
-protected:
-	UFUNCTION()
-	void OnPaddleHit(AActor* OverlappedActor, AActor* OtherActor);
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
-	UStaticMeshComponent* StaticMeshComponent;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
-	UBoxComponent* BoxComponent;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
-	UStaticMesh* BallMesh;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
-	uint8 bGameover : 1;
-
 	virtual void BeginPlay() override;
 
-public:	
-	
 	virtual void Tick(float DeltaTime) override;
 
+	void ResetBallState();
+
+	void Play();
+
+	void MoveBall(float DeltaTime);
+
+	void ShowScore();
+
+	UFUNCTION()
+	void OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+	int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
 private:
-	//UPROPERTY(EditAnywhere, Category = "Movement")
-	//float Speed = 500.0f;
+	UPROPERTY(EditDefaultsOnly)
+	UStaticMeshComponent* BallMesh;
+
+	UPROPERTY(EditDefaultsOnly)
+	USphereComponent* CollisionSphere;
+
+	UPROPERTY(EditAnywhere)
+	float MoveSpeed = 2000.0f;
+
+	// Launch ball variables
+	bool IsPlay;
+	bool DoOnce;
+
+	// Score variables
+	int Score1;
+	int Score2;
+
+	// Direction variables
+	float DirX;
+	float DirY;
+	float DirZ;
+
+	FVector Direction;
+
+	// Overlap checker to be sure there are no any 'double' overlaps with Pawn paddle
+	bool IsPawnOverlapped;
 };

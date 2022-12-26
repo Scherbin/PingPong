@@ -12,13 +12,15 @@ class PINGPONG_API APingPongGameModeBase : public AGameModeBase
 	GENERATED_BODY()
 	
 	//APingPongGameModeBase();
-
 public:
-	void StartGame() const;
-	void EndGame();
+	virtual void InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage) override;
 
-protected:
-	virtual void PostLogin(APlayerController* NewPlayer) override;
+	virtual void PreLogin(const FString& Options, const FString& Address, const FUniqueNetIdRepl& UniqueId, FString& ErrorMessage) override;
 
-	int ConnectedPlayers{};
+	virtual FString InitNewPlayer(APlayerController* NewPlayerController, const FUniqueNetIdRepl& UniqueId, const FString& Options,
+		const FString& Portal = TEXT("")) override;
+
+private:
+	TArray<class APlayerStart*> FreePlayerStarts;
+
 };
